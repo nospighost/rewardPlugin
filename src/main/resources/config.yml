@@ -1,0 +1,7 @@
+database:
+  host: localhost
+  port: 3308
+  database: bank
+  user: root
+  password: geheim
+alertCooldown: 5 # in Minuten
