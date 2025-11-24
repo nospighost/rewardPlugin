@@ -92,7 +92,7 @@ public class ClaimManager {
 
 
     public long getNextClaimTime() {
-        long nextClaimTime = System.currentTimeMillis() + (1 * 60 * 1000);
+        long nextClaimTime = System.currentTimeMillis() + (15 * 60 * 1000);
         return nextClaimTime;
     }
 }

@@ -16,6 +16,7 @@ public class AlertManager {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
 
+
                     ClaimManager.getInstance().canClaim(player, claimAble -> {
 
                         if (claimAble) {
