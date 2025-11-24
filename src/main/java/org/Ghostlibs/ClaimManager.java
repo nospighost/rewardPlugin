@@ -2,67 +2,97 @@ package org.Ghostlibs;
 
 import de.Main.database.DBM;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class ClaimManager {
 
     DBM dbm;
     private static ClaimManager instance;
-    public ClaimManager(DBM dbm){
+
+    public ClaimManager(DBM dbm) {
         this.dbm = dbm;
     }
 
     public static ClaimManager getInstance() {
-        if(instance == null) instance = new ClaimManager(Main.getInstance().getDbm());
+        if (instance == null) instance = new ClaimManager(Main.getInstance().getDbm());
         return instance;
     }
 
 
-
     public void giveReward(Player player) {
 
-        Economy eco = Main.getInstance().getEconomy();
-        int reward = dbm.getInt(Main.tableName, player.getUniqueId(), "reward", 0);
-        eco.depositPlayer(player, reward);
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
 
-        dbm.remove(Main.tableName, player.getUniqueId());
+            int reward = dbm.getInt(Main.tableName, player.getUniqueId(), "reward", 0);
 
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("owner_uuid", player.getUniqueId().toString());
-        data.put("nextClaimTime", getNextClaimTime());
-        data.put("reward", 250);
+            dbm.remove(Main.tableName, player.getUniqueId());
 
-        dbm.insertDefaultValues(Main.tableName, player.getUniqueId(), data);
-    }
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("owner_uuid", player.getUniqueId().toString());
+            data.put("nextClaimTime", getNextClaimTime());
+            data.put("reward", 250);
 
-    public boolean canClaim(Player player){
-        long currentTime = System.currentTimeMillis();
-        long nextClaimTime = dbm.getLong(Main.tableName, player.getUniqueId(), "nextClaimTime", -1);
-        if(nextClaimTime == -1) return false;
-        if(currentTime >= nextClaimTime) return true;
+            dbm.insertDefaultValues(Main.tableName, player.getUniqueId(), data);
 
-        return false;
-    }
+            Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
 
-    public String getRemainingTime(Player player){
-        long currentTime = System.currentTimeMillis();
-        long nextClaimTime = dbm.getLong(Main.tableName, player.getUniqueId(), "nextClaimTime", -1);
-        if(nextClaimTime == -1) return "ERROR";
+                Economy eco = Main.getInstance().getEconomy();
+                eco.depositPlayer(player, reward);
 
-        long remainingMs = nextClaimTime - currentTime;
-        long remainingSec = remainingMs / 1000;
-        long remainingMin = remainingSec / 60;
-
-        String remaining = remainingMin + " Minuten und " + remainingSec + " Sekunden";
-
-        return remaining;
+            });
+        });
     }
 
 
-    public long getNextClaimTime(){
+    public void canClaim(Player player, Consumer<Boolean> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+
+            long currentTime = System.currentTimeMillis();
+            long nextClaimTime = dbm.getLong(Main.tableName, player.getUniqueId(), "nextClaimTime", -1);
+
+            boolean result = nextClaimTime != -1 && currentTime >= nextClaimTime;
+
+            Bukkit.getScheduler().runTask(Main.getInstance(), () ->
+                    callback.accept(result)
+            );
+        });
+    }
+
+
+    public void getRemainingTime(Player player, Consumer<String> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+
+            long currentTime = System.currentTimeMillis();
+            long nextClaimTime = dbm.getLong(Main.tableName, player.getUniqueId(), "nextClaimTime", -1);
+
+            if (nextClaimTime == -1) {
+                Bukkit.getScheduler().runTask(Main.getInstance(), () ->
+                        callback.accept("ERROR")
+                );
+                return;
+            }
+
+            long remainingMs = nextClaimTime - currentTime;
+            long remainingSec = remainingMs / 1000;
+            long remainingMin = remainingSec / 60;
+
+            String remaining = remainingMin + " Minuten und " + (remainingSec % 60) + " Sekunden";
+
+            Bukkit.getScheduler().runTask(Main.getInstance(), () ->
+                    callback.accept(remaining)
+            );
+
+        });
+    }
+
+
+
+    public long getNextClaimTime() {
         long nextClaimTime = System.currentTimeMillis() + (1 * 60 * 1000);
-        return  nextClaimTime;
+        return nextClaimTime;
     }
 }

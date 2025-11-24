@@ -19,10 +19,13 @@ public class JoinManager implements Listener {
         Main.getInstance().getDbm().insertDefaultValues(Main.tableName, player.getUniqueId(), data);
 
 
-        player.sendMessage(Main.prefix);
-        player.sendMessage(Main.prefix + "§bDu kannst deine Belohnung in " + ClaimManager.getInstance().getRemainingTime(player) + " abholen!");
-        player.sendMessage(Main.prefix);
+        ClaimManager.getInstance().getRemainingTime(player, remaining -> {
 
+            player.sendMessage(Main.prefix);
+            player.sendMessage(Main.prefix + "§bDu kannst deine Belohnung in " + remaining + " abholen!");
+            player.sendMessage(Main.prefix);
+
+        });
 
     }
 

@@ -44,7 +44,6 @@ public final class Main extends JavaPlugin {
         registerCommands();
 
         Bukkit.getPluginManager().registerEvents(new JoinManager(), this);
-
         if(!(getConfig().getInt("alertCooldown") == -1)){
 
             AlertManager alertManager = new AlertManager();
@@ -55,7 +54,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
     }
 
 
