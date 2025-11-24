@@ -35,7 +35,7 @@ public final class Main extends JavaPlugin {
         config = getConfig();
         commandManager = new PaperCommandManager(this);
         if (!setupEconomy()) {
-            getLogger().info("Vault wurde nicht gefunden, Plugin wird deaktiviert");
+            getLogger().info("Vault wurde nicht gefunden, Plugin wird deaktiviert.");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -98,6 +98,7 @@ public final class Main extends JavaPlugin {
     }
 
     public Economy getEconomy() {
+
         return eco;
     }
 }
