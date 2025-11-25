@@ -2,5 +2,6 @@ name: RewardPlugin
 version: '1.0-SNAPSHOT'
 main: org.Ghostlibs.Main
 api-version: '1.21'
-prefix: [ BankSystem ]
-authors: [ nospighost ]
+authors: [ nospighost]
+depend:
+  - Vault

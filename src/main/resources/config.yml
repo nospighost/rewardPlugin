@@ -5,3 +5,5 @@ database:
   user: root
   password: geheim
 alertCooldown: 5 # in Minuten
+alertMessage: "§bDu kannst deine Belohnung abholen!"
+denyMessage: "§cDu kannst deine Belohnung in %time% abholen!"
