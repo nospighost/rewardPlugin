@@ -17,14 +17,14 @@ public class AlertManager {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
 
-                    ClaimManager.getInstance().canClaim(player, claimAble -> {
+                    ClaimManager.getInstance().canClaimAsync(player, claimAble -> {
 
                         if (claimAble) {
                             player.sendMessage(Main.prefix + config.getString("alertMessage"));
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                         } else {
-                            ClaimManager.getInstance().getRemainingTime(player, remaining -> {
-                                String message = config.getString("alertMessage").replace("%time%", remaining);
+                            ClaimManager.getInstance().getRemainingTimeAsync(player, remaining -> {
+                                String message = config.getString("denyMessage").replace("%time%", remaining);
                                 player.sendMessage(Main.prefix + message);
                             });
                         }

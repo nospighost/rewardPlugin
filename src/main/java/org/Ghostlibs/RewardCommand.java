@@ -12,23 +12,22 @@ public class RewardCommand extends BaseCommand {
 
     @Default
     public void onClaim(Player player) {
-        ClaimManager.getInstance().canClaim(player, claimAble -> {
-            if (!claimAble) {
-                ClaimManager.getInstance().getRemainingTime(player, nextClaimTime -> {
-                    player.sendMessage(Main.prefix + "§cDu kannst die nächste Belohnung in " + nextClaimTime + " abholen");
-                    return;
+        boolean claimAble = ClaimManager.getInstance().canClaim(player);
+        if (!claimAble) {
+            String  remainingTime = ClaimManager.getInstance().getRemainingTime(player);
 
-                });
+            player.sendMessage(Main.prefix + "§cDu kannst die nächste Belohnung in " + remainingTime + " abholen");
 
 
-            } else {
-                ClaimManager.getInstance().giveReward(player);
-                player.sendMessage(Main.prefix);
-                player.sendMessage(Main.prefix + "§bDu hast deine Belohnung erfolgreich abgeholt!");
-                player.sendMessage(Main.prefix);
-            }
-        });
-
+        } else {
+            ClaimManager.getInstance().giveReward(player);
+            player.sendMessage(Main.prefix);
+            player.sendMessage(Main.prefix + "§bDu hast deine Belohnung erfolgreich abgeholt!");
+            player.sendMessage(Main.prefix);
+        }
     }
-}
+};
+
+
+
 

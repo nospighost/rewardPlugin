@@ -48,7 +48,7 @@ public class ClaimManager {
     }
 
 
-    public void canClaim(Player player, Consumer<Boolean> callback) {
+    public void canClaimAsync(Player player, Consumer<Boolean> callback) {
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
 
             long currentTime = System.currentTimeMillis();
@@ -63,7 +63,19 @@ public class ClaimManager {
     }
 
 
-    public void getRemainingTime(Player player, Consumer<String> callback) {
+    public boolean canClaim(Player player) {
+
+        long currentTime = System.currentTimeMillis();
+        long nextClaimTime = dbm.getLong(Main.tableName, player.getUniqueId(), "nextClaimTime", -1);
+
+        boolean result = nextClaimTime != -1 && currentTime >= nextClaimTime;
+
+        return result;
+
+    }
+
+
+    public void getRemainingTimeAsync(Player player, Consumer<String> callback) {
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
 
             long currentTime = System.currentTimeMillis();
@@ -89,6 +101,27 @@ public class ClaimManager {
         });
     }
 
+    public String getRemainingTime(Player player) {
+
+        long currentTime = System.currentTimeMillis();
+        long nextClaimTime = dbm.getLong(Main.tableName, player.getUniqueId(), "nextClaimTime", -1);
+
+        if (nextClaimTime == -1) {
+            return "ERROR";
+        }
+
+        long remainingMs = nextClaimTime - currentTime;
+        long remainingSec = remainingMs / 1000;
+        long remainingMin = remainingSec / 60;
+
+        String remaining = remainingMin + " Minuten und " + (remainingSec % 60) + " Sekunden";
+
+        return remaining;
+
+
+    }
+
+    ;
 
 
     public long getNextClaimTime() {

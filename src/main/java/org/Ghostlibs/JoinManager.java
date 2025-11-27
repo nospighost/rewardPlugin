@@ -1,5 +1,6 @@
 package org.Ghostlibs;
 
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +20,7 @@ public class JoinManager implements Listener {
         Main.getInstance().getDbm().insertDefaultValues(Main.tableName, player.getUniqueId(), data);
 
 
-        ClaimManager.getInstance().getRemainingTime(player, remaining -> {
+        ClaimManager.getInstance().getRemainingTimeAsync(player, remaining -> {
 
             player.sendMessage(Main.prefix);
             player.sendMessage(Main.prefix + "§bDu kannst deine Belohnung in " + remaining + " abholen!");
