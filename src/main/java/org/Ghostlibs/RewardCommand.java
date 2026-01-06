@@ -16,13 +16,14 @@ public class RewardCommand extends BaseCommand {
         if (!claimAble) {
             String  remainingTime = ClaimManager.getInstance().getRemainingTime(player);
 
-            player.sendMessage(Main.prefix + "§cDu kannst die nächste Belohnung in " + remainingTime + " abholen");
+            player.sendMessage(Main.prefix + "§c§l Du kannst die nächste Belohnung in " + remainingTime + " abholen");
+
 
 
         } else {
             ClaimManager.getInstance().giveReward(player);
             player.sendMessage(Main.prefix);
-            player.sendMessage(Main.prefix + "§bDu hast deine Belohnung erfolgreich abgeholt!");
+            player.sendMessage(Main.prefix + "<green> Du hast deine Belohnung erfolgreich abgeholt!");
             player.sendMessage(Main.prefix);
         }
     }

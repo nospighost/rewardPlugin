@@ -22,9 +22,21 @@ public class JoinManager implements Listener {
 
         ClaimManager.getInstance().getRemainingTimeAsync(player, remaining -> {
 
-            player.sendMessage(Main.prefix);
-            player.sendMessage(Main.prefix + "§bDu kannst deine Belohnung in " + remaining + " abholen!");
-            player.sendMessage(Main.prefix);
+            if(Integer.valueOf(remaining) < 0){
+                remaining = "";
+            }
+
+
+            if(Integer.valueOf(remaining) <= 0){
+                player.sendMessage(Main.prefix);
+                player.sendMessage(Main.prefix + "§bDu kannst deine Belohnung abholen!");
+                player.sendMessage(Main.prefix);
+            } else {
+                player.sendMessage(Main.prefix);
+                player.sendMessage(Main.prefix + "§bDu kannst deine Belohnung in " + remaining  + " abholen!");
+                player.sendMessage(Main.prefix);
+            }
+
 
         });
 
